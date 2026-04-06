@@ -10,17 +10,17 @@ module Kanaui
       @report = {}
     end
 
+    def edit
+      @report = JSON.parse(Kanaui::DashboardHelper::DashboardApi.available_reports(options_for_klient))
+                    .find { |x| x['reportName'] == params.require(:id) }
+                    .deep_symbolize_keys
+    end
+
     def create
       Kanaui::DashboardHelper::DashboardApi.create_report(report_from_params.to_json, options_for_klient)
 
       flash[:notice] = 'Report successfully created'
       redirect_to action: :index
-    end
-
-    def edit
-      @report = JSON.parse(Kanaui::DashboardHelper::DashboardApi.available_reports(options_for_klient))
-                    .find { |x| x['reportName'] == params.require(:id) }
-                    .deep_symbolize_keys
     end
 
     def update

@@ -11,7 +11,7 @@ module Kanaui
 
       @raw_name = (params[:name] || '').split('^')[0]
 
-      @end_date = params[:end_date] || Date.today.to_s
+      @end_date = params[:end_date] || Time.zone.today.to_s
 
       @available_start_dates = start_date_options
       @start_date = params[:start_date] || (params[:delta_days].present? ? (@end_date.to_date - params[:delta_days].to_i.day).to_s : @available_start_dates['Last 6 months'])
@@ -29,8 +29,8 @@ module Kanaui
                          sql_only: params[:sql_only],
                          format: params[:format] }
 
-        query_params[:fake] = params[:fake] unless params[:fake].blank?
-        query_params[:type] = params[:type] unless params[:type].blank?
+        query_params[:fake] = params[:fake] if params[:fake].present?
+        query_params[:type] = params[:type] if params[:type].present?
 
         redirect_to dashboard_index_path(query_params) and return
       end
@@ -46,14 +46,14 @@ module Kanaui
         name = query.present? ? "#{params[:name]}#{query}^metric:count" : params[:name]
         query_params = { start_date: @start_date,
                          end_date: @end_date,
-                         name: name,
+                         name:,
                          smooth: params[:smooth],
                          sql_only: params[:sql_only],
                          format: params[:format] }
 
         # Test only
-        query_params[:fake] = params[:fake] unless params[:fake].blank?
-        query_params[:type] = params[:type] unless params[:type].blank?
+        query_params[:fake] = params[:fake] if params[:fake].present?
+        query_params[:type] = params[:type] if params[:type].present?
 
         redirect_to dashboard_index_path(query_params) and return
       end
@@ -86,12 +86,12 @@ module Kanaui
       respond_to do |fmt|
         fmt.csv do
           filename = params[:name]
-          unless params[:start_date].blank?
+          if params[:start_date].present?
             filename += "_#{params[:start_date]}"
-            filename += "-#{params[:end_date]}" unless params[:end_date].blank?
+            filename += "-#{params[:end_date]}" if params[:end_date].present?
           end
           filename += '.csv'
-          send_data(raw_reports, filename: filename)
+          send_data(raw_reports, filename:)
         end
         fmt.all { render json: reports }
       end
@@ -146,10 +146,10 @@ module Kanaui
       filters.each do |k, v|
         next if v.blank?
 
-        filter_query << '%26' unless filter_query.blank?
+        filter_query.presence&.<<('%26')
         filter_query << "(#{k}=#{v.join("|#{k}=")})"
       end
-      query << "^filter:#{filter_query}" unless filter_query.blank?
+      query << "^filter:#{filter_query}" if filter_query.present?
 
       groups.each do |k, v|
         next if v.blank?
