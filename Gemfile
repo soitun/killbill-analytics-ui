@@ -20,6 +20,10 @@ group :development do
   gem 'puma'
   gem 'rake'
   gem 'rubocop'
+  gem 'rubocop-performance'
+  gem 'rubocop-rails'
+  gem 'rubocop-rspec'
+  gem 'rubocop-thread_safety'
   gem 'simplecov'
   gem 'sprockets-rails'
 end

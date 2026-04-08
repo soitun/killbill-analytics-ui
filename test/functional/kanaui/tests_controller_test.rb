@@ -3,7 +3,7 @@
 require 'test_helper'
 
 module Kanaui
-  class TestsControllerTest < ActionController::TestCase
+  class TestsControllerTest < ActionDispatch::IntegrationTest
     # test "the truth" do
     #   assert true
     # end
