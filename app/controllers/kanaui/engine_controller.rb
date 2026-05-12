@@ -27,8 +27,22 @@ module Kanaui
     end
 
     rescue_from(KillBillClient::API::ResponseError) do |killbill_exception|
-      flash[:error] = "Error while communicating with the Kill Bill server: #{as_string(killbill_exception)}"
-      redirect_to dashboard_index_path
+      error_message = I18n.t('kanaui.errors.killbill_communication', error: as_string(killbill_exception))
+
+      if json_request?
+        render json: { message: error_message }, status: killbill_exception.response.code.to_i
+      else
+        flash[:error] = error_message
+        redirect_to dashboard_index_path
+      end
+    end
+
+    def json_request?
+      request.format.json? || params[:format] == 'json' || dashboard_reports_json_request?
+    end
+
+    def dashboard_reports_json_request?
+      controller_name == 'dashboard' && action_name == 'reports' && params[:format].blank?
     end
 
     def as_string(e)

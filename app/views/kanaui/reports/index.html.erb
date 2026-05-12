@@ -2,14 +2,17 @@
   <div class="d-flex " style="gap: 4rem;">
     <div class="configured-reports">
       <div class="d-flex flex-column ">
+        <% if @report_notice %>
+          <div class="alert alert-info kanaui-report-notice" role="status"><%= @report_notice %></div>
+        <% end %>
         <div class="configured-reports-header mb-4">
           <div class="d-flex align-items-center">
-          <h2>Configured reports</h2>
+          <h2><%= t('kanaui.reports.index.title') %></h2>
           </div>
           <span>
             <%= link_to dashboard_index_path, class: 'text-decoration-none' do %>
               <%= render "kaui/components/button/button", {
-                label: "Dashboard",
+                label: t('kanaui.reports.index.dashboard'),
                 variant: "outline-secondary d-inline-flex align-items-center gap-1",
                 type: "button",
                 html_class: "btn btn-xs kaui-button custom-hover py-2 px-3"
@@ -17,7 +20,7 @@
             <% end %>
             <%= link_to new_report_path, class: 'text-decoration-none' do %>
               <%= render "kaui/components/button/button", {
-                label: "New Report",
+                label: t('kanaui.reports.index.new_report'),
                 icon: "kaui/plus.svg",
                 variant: "outline-secondary d-inline-flex align-items-center gap-1",
                 type: "button",

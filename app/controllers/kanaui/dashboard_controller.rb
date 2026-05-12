@@ -19,9 +19,13 @@ module Kanaui
       @reports = JSON.parse(raw_reports)
       @report = current_report(@reports) || {}
 
-      # If no report name is provided, redirect to the default (second) report
-      if @raw_name.blank? && @reports.is_a?(Array) && @reports[1].present?
-        default_name = @reports[1]['reportName']
+      # If no report name is provided, redirect to a default report.
+      # Prefer the historical default (second report) when present, but fall back
+      # to the first report so a single configured report still renders the
+      # dashboard controls and chart area.
+      default_report = @reports[1] || @reports[0] if @reports.is_a?(Array)
+      if @raw_name.blank? && default_report.present?
+        default_name = default_report['reportName']
         query_params = { start_date: @start_date,
                          end_date: @end_date,
                          name: default_name,

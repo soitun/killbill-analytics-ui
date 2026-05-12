@@ -4,6 +4,7 @@ module Kanaui
   class ReportsController < Kanaui::EngineController
     def index
       @reports = JSON.parse(Kanaui::DashboardHelper::DashboardApi.available_reports(options_for_klient)).map(&:deep_symbolize_keys)
+      @report_notice = report_notice_from_params
     end
 
     def new
@@ -13,8 +14,7 @@ module Kanaui
     def create
       Kanaui::DashboardHelper::DashboardApi.create_report(report_from_params.to_json, options_for_klient)
 
-      flash[:notice] = 'Report successfully created'
-      redirect_to action: :index
+      redirect_to_index_with_notice(:created)
     end
 
     def edit
@@ -26,25 +26,33 @@ module Kanaui
     def update
       Kanaui::DashboardHelper::DashboardApi.update_report(params.require(:id), report_from_params.to_json, options_for_klient)
 
-      flash[:notice] = 'Report successfully updated'
-      redirect_to action: :index
+      redirect_to_index_with_notice(:updated)
     end
 
     def refresh
       Kanaui::DashboardHelper::DashboardApi.refresh_report(params.require(:id), options_for_klient)
 
-      flash[:notice] = 'Report refresh successfully scheduled'
-      redirect_to action: :index
+      redirect_to_index_with_notice(:refresh_scheduled)
     end
 
     def destroy
       Kanaui::DashboardHelper::DashboardApi.delete_report(params.require(:id), options_for_klient)
 
-      flash[:notice] = 'Report successfully deleted'
-      redirect_to action: :index
+      redirect_to_index_with_notice(:deleted)
     end
 
     private
+
+    def report_notice_from_params
+      notice_key = params[:report_notice].presence
+      return nil if notice_key.blank?
+
+      I18n.t("kanaui.reports.notices.#{notice_key}", default: nil)
+    end
+
+    def redirect_to_index_with_notice(notice_key)
+      redirect_to action: :index, report_notice: notice_key
+    end
 
     def report_from_params
       {

@@ -261,7 +261,7 @@
                               <pre><%= params[:name] -%></pre>
                             </li>
                         <% end %>
-                          <li><%= link_to 'SQL query', kanaui_engine.reports_path(params.to_h.merge(:sql_only => true)) %></li>
+                          <li><%= link_to t('kanaui.dashboard.advanced_controls.sql_query'), kanaui_engine.reports_path(params.to_h.merge(:sql_only => true)) %></li>
                         </ul>
                       </div>
                     </div>
