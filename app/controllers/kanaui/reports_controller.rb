@@ -4,7 +4,7 @@ module Kanaui
   class ReportsController < Kanaui::EngineController
     def index
       @reports = JSON.parse(Kanaui::DashboardHelper::DashboardApi.available_reports(options_for_klient)).map(&:deep_symbolize_keys)
-      @report_notice = report_notice_from_params
+      @report_notice = report_notice_from_flash
     end
 
     def new
@@ -43,15 +43,16 @@ module Kanaui
 
     private
 
-    def report_notice_from_params
-      notice_key = params[:report_notice].presence
-      return nil if notice_key.blank?
+    def report_notice_from_flash
+      notice_key = flash[:report_notice].presence&.to_s
+      return nil unless %w[created updated refresh_scheduled deleted].include?(notice_key)
 
       I18n.t("kanaui.reports.notices.#{notice_key}", default: nil)
     end
 
     def redirect_to_index_with_notice(notice_key)
-      redirect_to action: :index, report_notice: notice_key
+      flash[:report_notice] = notice_key
+      redirect_to action: :index
     end
 
     def report_from_params
