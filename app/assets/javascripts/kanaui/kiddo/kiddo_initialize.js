@@ -1,4 +1,26 @@
 (function (d3, $, window, document, undefined) {
+  function errorMessage(error) {
+    if (error && error.responseText) {
+      try {
+        var response = JSON.parse(error.responseText);
+        if (response.message) {
+          return response.message;
+        }
+      } catch (ex) {
+        return error.responseText;
+      }
+    }
+
+    return error && error.message ? error.message : String(error);
+  }
+
+  function renderError(message) {
+    var escapedMessage = $("<div/>").text(message).html();
+    $("#chartAnchor").prepend(
+      '<div class="alert alert-danger" role="alert">' + escapedMessage + "</div>"
+    );
+  }
+
   $(document).ready(function () {
     if ($("#chartAnchor").length == 0) {
       return;
@@ -10,7 +32,8 @@
       var renderer = new Kiddo.Renderer("#chartAnchor");
 
       if (error) {
-        ajaxErrorAlert(error);
+        var message = errorMessage(error);
+        renderError(message);
         return renderer.noData();
       }
 

@@ -1,16 +1,16 @@
 <table id="reports-table">
   <thead>
   <tr>
-    <th>Name</th>
-    <th>Pretty name</th>
-    <th>Type</th>
-    <th>Source</th>
-    <th>Source Name</th>
-    <th>Source Query</th>
-    <th>Refresh procedure</th>
-    <th>Refresh frequency</th>
-    <th>Refresh hour (GMT)</th>
-    <th>Fields</th>
+    <th><%= t('kanaui.reports.table.name') %></th>
+    <th><%= t('kanaui.reports.table.pretty_name') %></th>
+    <th><%= t('kanaui.reports.table.type') %></th>
+    <th><%= t('kanaui.reports.table.source') %></th>
+    <th><%= t('kanaui.reports.table.source_name') %></th>
+    <th><%= t('kanaui.reports.table.source_query') %></th>
+    <th><%= t('kanaui.reports.table.refresh_procedure') %></th>
+    <th><%= t('kanaui.reports.table.refresh_frequency') %></th>
+    <th><%= t('kanaui.reports.table.refresh_hour_gmt') %></th>
+    <th><%= t('kanaui.reports.table.fields') %></th>
     <th></th>
   </tr>
   </thead>
@@ -25,7 +25,7 @@
         <td>
           <% unless report[:sourceQuery].blank? %>
             <a href="" data-bs-toggle="modal" data-bs-target="#<%= report[:reportName] %>-query-modal">
-              Show SQL
+              <%= t('kanaui.reports.table.show_sql') %>
             </a>
 
             <div class="modal fade" id="<%= report[:reportName] %>-query-modal" tabindex="-1" role="dialog">
@@ -36,7 +36,7 @@
                       <span class="icon-container">
                         <%= image_tag("kaui/modal/search.svg", width: 20, height: 20) %>
                       </span>
-                      Source Query
+                      <%= t('kanaui.reports.table.source_query') %>
                     </h5>
                     <button type="button" class="close close-button custom-hover" data-bs-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">
@@ -49,7 +49,7 @@
                   </div>
                   <div class="modal-footer">
                     <%= render "kaui/components/button/button", {
-                      label: 'Close',
+                      label: t('kanaui.actions.close'),
                       variant: "outline-secondary d-inline-flex align-items-center gap-1",
                       type: "button",
                       html_class: "kaui-button custom-hover",
@@ -76,9 +76,9 @@
           </ul>
         </td>
         <td>
-          <%= link_to 'Delete', report_path(report[:reportName]), :method => :delete, :class => 'delete-button table-button' %>
-          <%= link_to 'Refresh', refresh_report_path(report[:reportName]), :method => :put, :class => 'refresh-button table-button' %>
-          <%= link_to 'Edit', edit_report_path(report[:reportName]), :class => 'edit-button table-button' %>
+          <%= link_to t('kanaui.actions.delete'), report_path(report[:reportName]), :method => :delete, :class => 'delete-button table-button' %>
+          <%= link_to t('kanaui.actions.refresh'), refresh_report_path(report[:reportName]), :method => :put, :class => 'refresh-button table-button' %>
+          <%= link_to t('kanaui.actions.edit'), edit_report_path(report[:reportName]), :class => 'edit-button table-button' %>
         </td>
       </tr>
     <% end %>

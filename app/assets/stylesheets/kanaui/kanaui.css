@@ -329,9 +329,23 @@
 
 /* app/views/kanaui/reports/index.html.erb */
 
+.kanaui-flash-container {
+  margin: 1rem 0 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.kanaui-flash-container .alert {
+  margin-bottom: 0.75rem;
+}
+
 .kanaui-reports-index .configured-reports {
   max-width: 80rem;
   width: 100%;
+}
+
+.kanaui-reports-index .kanaui-report-notice {
+  margin-bottom: 1rem;
 }
 
 .kanaui-reports-index .configured-reports .configured-reports-header {

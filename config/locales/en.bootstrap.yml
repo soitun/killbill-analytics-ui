@@ -2,6 +2,57 @@
 # See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
 
 en:
+  kanaui:
+    actions:
+      close: "Close"
+      delete: "Delete"
+      edit: "Edit"
+      refresh: "Refresh"
+      save: "Save"
+    errors:
+      killbill_communication: "Error while communicating with the Kill Bill server: %{error}"
+    dashboard:
+      advanced_controls:
+        sql_query: "SQL query"
+    reports:
+      notices:
+        created: "Report successfully created"
+        updated: "Report successfully updated"
+        refresh_scheduled: "Report refresh successfully scheduled"
+        deleted: "Report successfully deleted"
+      index:
+        title: "Configured reports"
+        dashboard: "Dashboard"
+        new_report: "New Report"
+      new:
+        title: "Add new report"
+      edit:
+        title: "Update report"
+      form:
+        report_name: "Report name"
+        pretty_name: "Pretty name"
+        type: "Type"
+        source: "Source"
+        source_name: "Source name"
+        source_name_help: "Must match a database configuration entry in the Analytics plugin"
+        source_query: "SQL query"
+        source_query_help: "Don't add a trailing ;"
+        source_configuration_error: "When Source name is set, provide exactly one of Source or SQL query."
+        refresh_procedure: "Refresh procedure"
+        refresh_frequency: "Refresh frequency"
+        refresh_hour_gmt: "Refresh hour (GMT)"
+      table:
+        name: "Name"
+        pretty_name: "Pretty name"
+        type: "Type"
+        source: "Source"
+        source_name: "Source Name"
+        source_query: "Source Query"
+        refresh_procedure: "Refresh procedure"
+        refresh_frequency: "Refresh frequency"
+        refresh_hour_gmt: "Refresh hour (GMT)"
+        fields: "Fields"
+        show_sql: "Show SQL"
   helpers:
     actions: "Actions"
     links:

@@ -11,24 +11,20 @@
   <div class="container">
     <div class="container-fluid">
       <%- # :alert used by devise -%>
-      <% [:error, :alert].each do |key| %>
-          <% if flash[key] %>
-              <div class="row">
-                <div class="col-md-10 col-md-offset-2">
-                  <div class="alert alert-error"><%= flash[key] %></div>
-                </div>
-              </div>
+      <% if flash[:error] || flash[:alert] || flash[:notice] %>
+        <div class="kanaui-flash-container">
+          <% [:error, :alert].each do |key| %>
+            <% if flash[key] %>
+              <div class="alert alert-danger alert-error" role="alert"><%= flash[key] %></div>
+            <% end %>
           <% end %>
-      <% end %>
-      <% if flash[:notice] %>
-          <div class="row">
-            <div class="col-md-10 col-md-offset-2">
-              <div class="alert alert-info"><%= flash[:notice] %></div>
-            </div>
-          </div>
+          <% if flash[:notice] %>
+            <div class="alert alert-info" role="status"><%= flash[:notice] %></div>
+          <% end %>
+        </div>
       <% end %>
       <%= yield %>
-    <div>
+    </div>
   </div>
 </body>
 </html>
