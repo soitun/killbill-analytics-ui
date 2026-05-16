@@ -407,6 +407,11 @@
   color: #d92d20 !important;
 }
 
+.kanaui-reports-index .disabled-table-button {
+  color: #98a2b3 !important;
+  cursor: not-allowed;
+}
+
 .kanaui-reports-index .edit-button {
   color: #535862 !important;
 }

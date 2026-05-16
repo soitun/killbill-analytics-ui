@@ -24,8 +24,8 @@ module Kanaui
       # to the first report so a single configured report still renders the
       # dashboard controls and chart area.
       default_report = @reports[1] || @reports[0] if @reports.is_a?(Array)
-      if @raw_name.blank? && default_report.present?
-        default_name = default_report['reportName']
+      default_name = default_report&.fetch('reportName', nil).presence
+      if @raw_name.blank? && default_name.present?
         query_params = { start_date: @start_date,
                          end_date: @end_date,
                          name: default_name,

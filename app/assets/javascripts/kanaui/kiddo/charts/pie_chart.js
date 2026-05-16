@@ -2,6 +2,7 @@
   Kiddo.PieChart = function () {
     var self = this;
     var radius = Math.min(this.width, this.height) / 2;
+    var helper = new Kiddo.Helper();
 
     // Custom blue color theme - matching the line chart
     var blueColors = [
@@ -74,7 +75,7 @@
           })
           .html(function (d, i) {
             return (
-              colorCircle(d.data.value, i) + d.data.label + ": " + d.data.value
+              colorCircle(d.data.value, i) + helper.formatSeriesName(d.data.label) + ": " + d.data.value
             );
           })
           .attr("class", "chart_values");

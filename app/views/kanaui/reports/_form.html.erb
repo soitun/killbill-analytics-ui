@@ -2,38 +2,46 @@
   <div class="form-group d-flex pb-3">
     <%= label_tag :report_name, t('kanaui.reports.form.report_name'), :class => 'col-sm-3 control-label' %>
     <div class="col-sm-9">
-      <%= text_field_tag :report_name, @report[:reportName], :class => 'form-control', :disabled => !@report[:reportName].blank?, :read_only => !@report[:reportName].blank? %>
+      <div class="kanaui-field-control">
+        <%= text_field_tag :report_name, @report[:reportName], :class => 'form-control', :disabled => !@report[:reportName].blank?, :read_only => !@report[:reportName].blank?, :required => @report[:reportName].blank? %>
+        <button type="button" class="kanaui-field-help" data-kanaui-tooltip="<%= t('kanaui.reports.form.tooltips.report_name') %>" aria-label="<%= t('kanaui.reports.form.tooltips.report_name') %>" aria-expanded="false"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
+      </div>
     </div>
   </div>
   <div class="form-group d-flex pb-3">
     <%= label_tag :report_pretty_name, t('kanaui.reports.form.pretty_name'), :class => 'col-sm-3 control-label' %>
     <div class="col-sm-9">
-      <%= text_field_tag :report_pretty_name, @report[:reportPrettyName], :class => 'form-control' %>
+      <div class="kanaui-field-control">
+        <%= text_field_tag :report_pretty_name, @report[:reportPrettyName], :class => 'form-control' %>
+        <button type="button" class="kanaui-field-help" data-kanaui-tooltip="<%= t('kanaui.reports.form.tooltips.report_pretty_name') %>" aria-label="<%= t('kanaui.reports.form.tooltips.report_pretty_name') %>" aria-expanded="false"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
+      </div>
     </div>
   </div>
   <div class="form-group d-flex pb-3">
     <%= label_tag :report_type, t('kanaui.reports.form.type'), :class => 'col-sm-3 control-label' %>
     <div class="col-sm-9">
-      <%= select_tag :report_type, options_for_select(%w(TIMELINE COUNTERS TABLE), @report[:reportType] || 'TABLE'), :class => 'form-control' %>
+      <div class="kanaui-field-control">
+        <%= select_tag :report_type, options_for_select(%w(TIMELINE COUNTERS TABLE), @report[:reportType] || 'TABLE'), :class => 'form-control', :required => true %>
+        <button type="button" class="kanaui-field-help" data-kanaui-tooltip="<%= t('kanaui.reports.form.tooltips.report_type') %>" aria-label="<%= t('kanaui.reports.form.tooltips.report_type') %>" aria-expanded="false"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
+      </div>
     </div>
   </div>
   <div class="form-group d-flex pb-3">
-    <%= label_tag :source_table_name, t('kanaui.reports.form.source'), :class => 'col-sm-3 control-label' %>
+    <%= label_tag :source_table_name, t('kanaui.reports.form.source_table_name'), :class => 'col-sm-3 control-label' %>
     <div class="col-sm-9">
-      <%= text_field_tag :source_table_name, @report[:sourceTableName], :class => 'form-control' %>
-    </div>
-  </div>
-  <div class="form-group d-flex pb-3">
-    <%= label_tag :source_name, t('kanaui.reports.form.source_name'), :class => 'col-sm-3 control-label' %>
-    <div class="col-sm-9">
-      <%= text_field_tag :source_name, @report[:sourceName], :class => 'form-control' %>
-      <span><%= t('kanaui.reports.form.source_name_help') %></span>
+      <div class="kanaui-field-control">
+        <%= text_field_tag :source_table_name, @report[:sourceTableName], :class => 'form-control' %>
+        <button type="button" class="kanaui-field-help" data-kanaui-tooltip="<%= t('kanaui.reports.form.tooltips.source_table_name') %>" aria-label="<%= t('kanaui.reports.form.tooltips.source_table_name') %>" aria-expanded="false"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
+      </div>
     </div>
   </div>
   <div class="form-group d-flex pb-3">
     <%= label_tag :source_query, t('kanaui.reports.form.source_query'), :class => 'col-sm-3 control-label' %>
     <div class="col-sm-9">
-      <%= text_area_tag :source_query, @report[:sourceQuery], rows: 10, cols: 25, :class => 'form-control' %>
+      <div class="kanaui-field-control kanaui-field-control-top">
+        <%= text_area_tag :source_query, @report[:sourceQuery], rows: 10, cols: 25, :class => 'form-control' %>
+        <button type="button" class="kanaui-field-help" data-kanaui-tooltip="<%= t('kanaui.reports.form.tooltips.source_query') %>" aria-label="<%= t('kanaui.reports.form.tooltips.source_query') %>" aria-expanded="false"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
+      </div>
       <span><%= t('kanaui.reports.form.source_query_help') %></span>
       <div id="source-configuration-error" class="text-danger mt-2" style="display: none;">
         <%= t('kanaui.reports.form.source_configuration_error') %>
@@ -41,21 +49,40 @@
     </div>
   </div>
   <div class="form-group d-flex pb-3">
+    <%= label_tag :source_name, t('kanaui.reports.form.source_name'), :class => 'col-sm-3 control-label' %>
+    <div class="col-sm-9">
+      <div class="kanaui-field-control">
+        <%= text_field_tag :source_name, @report[:sourceName], :class => 'form-control' %>
+        <button type="button" class="kanaui-field-help" data-kanaui-tooltip="<%= t('kanaui.reports.form.tooltips.source_name') %>" aria-label="<%= t('kanaui.reports.form.tooltips.source_name') %>" aria-expanded="false"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
+      </div>
+      <span><%= t('kanaui.reports.form.source_name_help') %></span>
+    </div>
+  </div>
+  <div class="form-group d-flex pb-3">
     <%= label_tag :refresh_procedure_name, t('kanaui.reports.form.refresh_procedure'), :class => 'col-sm-3 control-label' %>
     <div class="col-sm-9">
-      <%= text_field_tag :refresh_procedure_name, @report[:refreshProcedureName], :class => 'form-control' %>
+      <div class="kanaui-field-control">
+        <%= text_field_tag :refresh_procedure_name, @report[:refreshProcedureName], :class => 'form-control' %>
+        <button type="button" class="kanaui-field-help" data-kanaui-tooltip="<%= t('kanaui.reports.form.tooltips.refresh_procedure_name') %>" aria-label="<%= t('kanaui.reports.form.tooltips.refresh_procedure_name') %>" aria-expanded="false"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
+      </div>
     </div>
   </div>
   <div class="form-group d-flex pb-3">
     <%= label_tag :refresh_frequency, t('kanaui.reports.form.refresh_frequency'), :class => 'col-sm-3 control-label' %>
     <div class="col-sm-9">
-      <%= select_tag :refresh_frequency, options_for_select(%w(HOURLY DAILY), @report[:refreshFrequency]), :class => 'form-control', :include_blank => true %>
+      <div class="kanaui-field-control">
+        <%= select_tag :refresh_frequency, options_for_select(%w(HOURLY DAILY), @report[:refreshFrequency]), :class => 'form-control', :include_blank => true %>
+        <button type="button" class="kanaui-field-help" data-kanaui-tooltip="<%= t('kanaui.reports.form.tooltips.refresh_frequency') %>" aria-label="<%= t('kanaui.reports.form.tooltips.refresh_frequency') %>" aria-expanded="false"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
+      </div>
     </div>
   </div>
   <div class="form-group d-flex pb-3">
     <%= label_tag :refresh_hour_of_day_gmt, t('kanaui.reports.form.refresh_hour_gmt'), :class => 'col-sm-3 control-label' %>
     <div class="col-sm-9">
-      <%= number_field_tag :refresh_hour_of_day_gmt, @report[:refreshHourOfDayGmt], {:min => 1, :max => 23, :class => 'form-control'} %>
+      <div class="kanaui-field-control">
+        <%= number_field_tag :refresh_hour_of_day_gmt, @report[:refreshHourOfDayGmt], {:min => 1, :max => 23, :class => 'form-control'} %>
+        <button type="button" class="kanaui-field-help" data-kanaui-tooltip="<%= t('kanaui.reports.form.tooltips.refresh_hour_of_day_gmt') %>" aria-label="<%= t('kanaui.reports.form.tooltips.refresh_hour_of_day_gmt') %>" aria-expanded="false"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
+      </div>
     </div>
   </div>
 
@@ -85,16 +112,69 @@
       return;
     }
 
+    $(function () {
+      var tooltip = document.createElement('div');
+      tooltip.className = 'kanaui-field-tooltip';
+      tooltip.setAttribute('role', 'tooltip');
+      document.body.appendChild(tooltip);
+      var activeTooltipTrigger = null;
+
+      function hideTooltip() {
+        tooltip.classList.remove('is-visible');
+        if (activeTooltipTrigger) {
+          activeTooltipTrigger.setAttribute('aria-expanded', 'false');
+          activeTooltipTrigger = null;
+        }
+      }
+
+      document.querySelectorAll('[data-kanaui-tooltip]').forEach(function (el) {
+        el.addEventListener('click', function (event) {
+          event.stopPropagation();
+          if (activeTooltipTrigger === el && tooltip.classList.contains('is-visible')) {
+            hideTooltip();
+            return;
+          }
+
+          var rect = el.getBoundingClientRect();
+          var left = window.pageXOffset + rect.right + 12;
+          var top = window.pageYOffset + rect.top - 2;
+
+          hideTooltip();
+          tooltip.textContent = el.getAttribute('data-kanaui-tooltip');
+          tooltip.style.left = left + 'px';
+          tooltip.style.top = top + 'px';
+          tooltip.classList.remove('is-flipped');
+          tooltip.classList.add('is-visible');
+          activeTooltipTrigger = el;
+          activeTooltipTrigger.setAttribute('aria-expanded', 'true');
+
+          if (tooltip.getBoundingClientRect().right > window.innerWidth - 12) {
+            tooltip.style.left = window.pageXOffset + rect.left - tooltip.offsetWidth - 12 + 'px';
+            tooltip.classList.add('is-flipped');
+          }
+        });
+      });
+
+      document.addEventListener('click', function () {
+        hideTooltip();
+      });
+
+      document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') {
+          hideTooltip();
+        }
+      });
+    });
+
     form.addEventListener('submit', function (event) {
-      var sourceName = document.getElementById('source_name').value.trim();
       var sourceTableName = document.getElementById('source_table_name').value.trim();
       var sourceQuery = document.getElementById('source_query').value.trim();
       var error = document.getElementById('source-configuration-error');
 
-      if (sourceName && !!sourceTableName === !!sourceQuery) {
+      if (!sourceTableName && !sourceQuery) {
         event.preventDefault();
         error.style.display = 'block';
-        document.getElementById(sourceTableName ? 'source_query' : 'source_table_name').focus();
+        document.getElementById('source_table_name').focus();
       } else {
         error.style.display = 'none';
       }

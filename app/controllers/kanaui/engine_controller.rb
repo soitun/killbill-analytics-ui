@@ -33,7 +33,12 @@ module Kanaui
         render json: { message: error_message }, status: killbill_exception.response.code.to_i
       else
         flash[:error] = error_message
-        redirect_to dashboard_index_path
+        # Avoid redirect loops when the dashboard itself cannot be loaded.
+        if controller_name == 'dashboard' && action_name == 'index'
+          render plain: error_message, status: killbill_exception.response.code.to_i
+        else
+          redirect_to dashboard_index_path
+        end
       end
     end
 

@@ -18,18 +18,18 @@
     var axes = Kiddo.Axes.apply(this);
     var helper = new Kiddo.Helper();
 
-    // Custom blue color theme matching the image
-    var blueColors = [
-      "#1565C0",
-      "#1976D2",
-      "#2196F3",
-      "#42A5F5",
-      "#64B5F6",
-      "#90CAF9",
-      "#BBDEFB",
-      "#E3F2FD",
+    // Custom multi-color theme matching the image
+    var colors = [
+      "#2196F3", // blue
+      "#E53935", // red
+      "#43A047", // green
+      "#FB8C00", // orange
+      "#8E24AA", // purple
+      "#00ACC1", // cyan
+      "#F4511E", // deep orange
+      "#6D4C41", // brown
     ];
-    self.color = d3.scale.ordinal().range(blueColors);
+    self.color = d3.scale.ordinal().range(colors);
 
     return {
       render: function (svg, json) {
@@ -108,7 +108,7 @@
 
           // Add text label
           var labelText =
-            d.name + " :: " + d.count + ": " + d3.format(",.2f")(d.value);
+            helper.formatSeriesName(d.name) + " (" + d.count + "): " + d3.format(",.2f")(d.value);
           legendItem
             .append("text")
             .attr("x", xOffset + 18)

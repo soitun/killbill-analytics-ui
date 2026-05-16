@@ -16,6 +16,7 @@
   </thead>
   <tbody>
     <% reports.each do |report| %>
+      <% report_name = report[:reportName].to_s %>
       <tr>
         <td><%= report[:reportName] %></td>
         <td><%= report[:reportPrettyName] %></td>
@@ -70,15 +71,19 @@
         <td><%= report[:refreshHourOfDayGmt] %></td>
         <td>
           <ul>
-            <% report[:schema][:fields].each do |field| %>
+            <% Array(report.dig(:schema, :fields)).each do |field| %>
                 <li><%= field[:name] %> (<%= field[:dataType] %>)</li>
             <% end %>
           </ul>
         </td>
         <td>
-          <%= link_to t('kanaui.actions.delete'), report_path(report[:reportName]), :method => :delete, :class => 'delete-button table-button' %>
-          <%= link_to t('kanaui.actions.refresh'), refresh_report_path(report[:reportName]), :method => :put, :class => 'refresh-button table-button' %>
-          <%= link_to t('kanaui.actions.edit'), edit_report_path(report[:reportName]), :class => 'edit-button table-button' %>
+          <% if report_name.blank? %>
+            <span class="table-button disabled-table-button" title="<%= report[:recordId].present? ? t('kanaui.reports.table.cleanup_required_with_record_id', :record_id => report[:recordId]) : t('kanaui.reports.table.cleanup_required') %>"><%= t('kanaui.actions.delete') %></span>
+          <% else %>
+            <%= link_to t('kanaui.actions.delete'), report_path(report_name), :method => :delete, :class => 'delete-button table-button' %>
+            <%= link_to t('kanaui.actions.refresh'), refresh_report_path(report_name), :method => :put, :class => 'refresh-button table-button' %>
+            <%= link_to t('kanaui.actions.edit'), edit_report_path(report_name), :class => 'edit-button table-button' %>
+          <% end %>
         </td>
       </tr>
     <% end %>
