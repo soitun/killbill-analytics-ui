@@ -80,8 +80,8 @@
             .attr("transform", "translate(" + self.margin_left + ",0)");
         });
 
-        function mousemove() {
-          var _this = this;
+        function mousemove(event) {
+          var mouseX = d3.pointer(event, this)[0];
 
           $("#mouseover_canvas .chart_values").detach().remove();
           $("#mouseover_canvas .chart_circles").detach().remove();
@@ -94,7 +94,7 @@
             var data = element.values;
             var name = element.name;
 
-            var x0 = x.invert(d3.mouse(_this)[0]),
+            var x0 = x.invert(mouseX),
               i = helper.bisectDate(data, x0, 1),
               d0 = data[i - 1],
               d1 = data[i];

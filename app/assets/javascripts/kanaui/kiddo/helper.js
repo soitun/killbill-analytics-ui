@@ -48,7 +48,7 @@
     };
 
     return {
-      parseDate: d3.time.format("%Y-%m-%d").parse,
+      parseDate: d3.timeParse("%Y-%m-%d"),
       bisectDate: d3.bisector(function (d) {
         return d.x;
       }).left,

@@ -3,14 +3,12 @@
     var self = this;
 
     var makeXAxis = function () {
-      return d3.svg.axis().scale(self.x).orient("bottom").ticks(6);
+      return d3.axisBottom(self.x).ticks(6);
     };
 
     var makeYAxis = function () {
-      return d3.svg
-        .axis()
-        .scale(self.y)
-        .orient("left")
+      return d3
+        .axisLeft(self.y)
         .tickFormat(d3.format(",d"));
     };
 
@@ -28,13 +26,13 @@
             "transform",
             "translate(" + self.margin_left + "," + self.height + ")"
           )
-          .call(makeXAxis().tickSize(-self.height, 0, 0).tickFormat(""));
+          .call(makeXAxis().tickSize(-self.height).tickFormat(""));
 
         svg
           .append("g")
           .attr("class", "grid")
           .attr("transform", "translate(" + self.margin_left + ",0)")
-          .call(makeYAxis().tickSize(-self.width, 0, 0).tickFormat(""));
+          .call(makeYAxis().tickSize(-self.width).tickFormat(""));
 
         svg
           .append("g")

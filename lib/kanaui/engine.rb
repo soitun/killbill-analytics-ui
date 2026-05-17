@@ -11,7 +11,6 @@ require 'jquery-rails'
 require 'killbill_assets_ui'
 require 'font-awesome-rails'
 require 'bootstrap-datepicker-rails'
-require 'd3_rails'
 require 'spinjs-rails'
 require 'killbill_client'
 
