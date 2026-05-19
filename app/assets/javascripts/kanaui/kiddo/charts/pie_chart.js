@@ -2,26 +2,27 @@
   Kiddo.PieChart = function () {
     var self = this;
     var radius = Math.min(this.width, this.height) / 2;
+    var helper = new Kiddo.Helper();
 
     // Custom blue color theme - matching the line chart
-    var blueColors = [
-      "#1565C0",
-      "#1976D2",
-      "#2196F3",
-      "#42A5F5",
-      "#64B5F6",
-      "#90CAF9",
-      "#BBDEFB",
-      "#E3F2FD",
+    var colors = [
+      "#2196F3", // blue
+      "#E53935", // red
+      "#43A047", // green
+      "#FB8C00", // orange
+      "#8E24AA", // purple
+      "#00ACC1", // cyan
+      "#F4511E", // deep orange
+      "#6D4C41", // brown
     ];
-    var color = d3.scale.ordinal().range(blueColors);
+    var color = d3.scaleOrdinal().range(colors);
 
-    var arc = d3.svg
+    var arc = d3
       .arc()
       .outerRadius(radius - 10)
       .innerRadius(0);
 
-    var pie = d3.layout
+    var pie = d3
       .pie()
       .sort(null)
       .value(function (d) {
@@ -40,6 +41,10 @@
         data.forEach(function (d) {
           d.value = +d.value;
         });
+
+        color.domain(data.map(function (d, index) {
+          return index;
+        }));
 
         var g = svg
           .selectAll(".arc")
@@ -74,7 +79,7 @@
           })
           .html(function (d, i) {
             return (
-              colorCircle(d.data.value, i) + d.data.label + ": " + d.data.value
+              colorCircle(d.data.value, i) + helper.formatSeriesName(d.data.label) + ": " + d.data.value
             );
           })
           .attr("class", "chart_values");

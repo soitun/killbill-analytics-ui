@@ -26,16 +26,10 @@
       return;
     }
 
-    d3.json($("#chartAnchor").data("reports-path"), function (error, json) {
+    d3.json($("#chartAnchor").data("reports-path")).then(function (json) {
       $("#loading-spinner").remove();
 
       var renderer = new Kiddo.Renderer("#chartAnchor");
-
-      if (error) {
-        var message = errorMessage(error);
-        renderError(message);
-        return renderer.noData();
-      }
 
       var data = json[0];
 
@@ -72,6 +66,12 @@
         console.log(ex);
         renderer.noData();
       }
+    }).catch(function (error) {
+      $("#loading-spinner").remove();
+
+      var renderer = new Kiddo.Renderer("#chartAnchor");
+      renderError(errorMessage(error));
+      return renderer.noData();
     });
   });
 })(d3, jQuery, window, document);

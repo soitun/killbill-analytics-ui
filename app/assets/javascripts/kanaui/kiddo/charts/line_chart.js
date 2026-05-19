@@ -2,10 +2,10 @@
   Kiddo.LineChart = function () {
     var self = this;
 
-    this.x = d3.time.scale().range([0, this.width]);
-    this.y = d3.scale.linear().range([this.height, 0]);
+    this.x = d3.scaleTime().range([0, this.width]);
+    this.y = d3.scaleLinear().range([this.height, 0]);
 
-    var valueline = d3.svg
+    var valueline = d3
       .line()
       .x(function (d) {
         return self.x(d.x);
@@ -13,28 +13,36 @@
       .y(function (d) {
         return self.y(d.y);
       })
-      .interpolate("monotone"); // Smooth line interpolation
+      .curve(d3.curveMonotoneX);
 
     var axes = Kiddo.Axes.apply(this);
     var helper = new Kiddo.Helper();
 
-    // Custom blue color theme matching the image
-    var blueColors = [
-      "#1565C0",
-      "#1976D2",
-      "#2196F3",
-      "#42A5F5",
-      "#64B5F6",
-      "#90CAF9",
-      "#BBDEFB",
-      "#E3F2FD",
+    // Custom multi-color theme matching the image
+    var colors = [
+      "#2196F3", // blue
+      "#E53935", // red
+      "#43A047", // green
+      "#FB8C00", // orange
+      "#8E24AA", // purple
+      "#00ACC1", // cyan
+      "#F4511E", // deep orange
+      "#6D4C41", // brown
     ];
-    self.color = d3.scale.ordinal().range(blueColors);
+    self.color = d3.scaleOrdinal().range(colors);
 
     return {
       render: function (svg, json) {
         var title = json.title,
           datasets = json.data;
+
+        datasets.forEach(function (dataset) {
+          dataset.values.forEach(function (d) {
+            d.date = d.x.split("T")[0];
+            d.x = helper.parseDate(d.date);
+            d.y = +d.y;
+          });
+        });
 
         // Scale the range of the data before rendering axes
         var allValues = datasets.reduce(function (result, element) {
@@ -42,30 +50,23 @@
         }, []);
 
         var x_domain = d3.extent(allValues, function (d) {
-          return new Date(d.x);
+          return d.x;
         });
 
         self.x.domain(x_domain);
 
-        var y_domain = [
-          d3.min(datasets, function (datum) {
-            return d3.min(datum.values, function (d) {
-              return d.y;
-            });
-          }),
-          d3.max(datasets, function (datum) {
-            return d3.max(datum.values, function (d) {
-              return d.y;
-            });
-          }),
-        ];
+        var y_domain = d3.extent(allValues, function (d) {
+          return d.y;
+        });
 
         self.y.domain(y_domain);
 
         // Render axes first
         axes.render(svg, title);
 
-        self.color.domain(d3.keys(datasets));
+        self.color.domain(datasets.map(function (dataset) {
+          return dataset.name;
+        }));
 
         // Create legend container at the top
         var legendContainer = svg
@@ -108,7 +109,7 @@
 
           // Add text label
           var labelText =
-            d.name + " :: " + d.count + ": " + d3.format(",.2f")(d.value);
+            helper.formatSeriesName(d.name) + " (" + d.count + "): " + d3.format(",.2f")(d.value);
           legendItem
             .append("text")
             .attr("x", xOffset + 18)
@@ -128,12 +129,6 @@
         datasets.forEach(function (dataset) {
           var data = dataset.values,
             name = dataset.name;
-
-          data.forEach(function (d) {
-            d.date = d.x.split("T")[0]; // Support both date and date/times
-            d.x = helper.parseDate(d.date);
-            d.y = +d.y;
-          });
 
           svg
             .append("path")

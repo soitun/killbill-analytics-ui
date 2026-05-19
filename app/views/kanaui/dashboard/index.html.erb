@@ -43,6 +43,10 @@
                     <%= link_to "Fake line", kanaui_engine.dashboard_index_path(fake: 1, name: 'fake_line', type: 'line') %>
                   </li>
                 </ul>
+              <% elsif @reports.empty? %>
+                <select class="form-select" id="report-select" disabled>
+                  <option value=""><%= t('kanaui.dashboard.no_reports_available') %></option>
+                </select>
               <% else %>
                 <select class="form-select" id="report-select" onchange="goToReport(this.value);">
                   <% @reports.each_with_index do |r, idx| %>
@@ -58,7 +62,7 @@
             
 
             <div class="calendar-container">
-              <% if params[:name] %>
+              <% if params[:name].present? || @reports.empty? %>
                 <div class="form-container d-flex">
                   <%= form_tag kanaui_engine.dashboard_index_path, :class => 'form-vertical d-flex', :method => :get do %>
                     <div class="trigger-invoice-box form-group">
@@ -79,7 +83,7 @@
                                 <path d="M2.83325 8.33325H17.8333" stroke="#A4A7AE" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                               </svg>
 
-                              <input class="form-control datepicker" name="start_date" type="text" data-provide="datepicker" data-date-format="yyyy-mm-dd" data-date-today-highlight="true" value="<%= @start_date %>">
+                              <input class="form-control datepicker" name="start_date" type="text" data-provide="datepicker" data-date-format="yyyy-mm-dd" data-date-today-highlight="true" value="<%= @start_date %>"<%= ' disabled' if @reports.empty? %>>
                             </div>
                           </div>
                           <div class="form-group d-flex align-items-center gap-2">
@@ -92,7 +96,7 @@
                                 <path d="M2.83325 8.33325H17.8333" stroke="#A4A7AE" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                               </svg>
 
-                              <input class="form-control datepicker" name="end_date" type="text" data-provide="datepicker" data-date-format="yyyy-mm-dd" data-date-today-highlight="true" value="<%= @end_date %>">
+                              <input class="form-control datepicker" name="end_date" type="text" data-provide="datepicker" data-date-format="yyyy-mm-dd" data-date-today-highlight="true" value="<%= @end_date %>"<%= ' disabled' if @reports.empty? %>>
                             </div>
                           </div>
                           <% ((@report['variables'] || {})['fields'] || []).each do |definition| %>
@@ -118,6 +122,7 @@
                           variant: "outline-secondary d-inline-flex align-items-center gap-1",
                           type: "submit",
                           html_class: "btn btn-xs kaui-dropdown custom-hover py-2 px-3 refresh-button",
+                          html_options: { disabled: @reports.empty? },
                         } %>
                       
                           <%= link_to kanaui_engine.url_for(:controller => :reports), class: 'text-decoration-none' do %>

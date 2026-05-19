@@ -3,6 +3,91 @@
     white-space: nowrap;
 }
 
+.kanaui-field-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.kanaui-field-control-top {
+  align-items: flex-start;
+}
+
+.kanaui-field-control .form-control {
+  flex: 1 1 auto;
+}
+
+.kanaui-field-help {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  color: #6b7280;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1;
+  text-align: center;
+  cursor: pointer;
+}
+
+.kanaui-field-help:hover,
+.kanaui-field-help:focus {
+  color: #111827;
+  background: transparent;
+  outline: none;
+}
+
+.kanaui-field-help:focus {
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.24);
+  border-radius: 3px;
+}
+
+.kanaui-field-tooltip {
+  position: absolute;
+  z-index: 1070;
+  display: none;
+  max-width: 360px;
+  padding: 10px 12px;
+  color: #1f2937;
+  background-color: #fff;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.5;
+  pointer-events: none;
+}
+
+.kanaui-field-tooltip::before {
+  content: "";
+  position: absolute;
+  top: 12px;
+  left: -6px;
+  width: 0;
+  height: 0;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-right: 6px solid #fff;
+}
+
+.kanaui-field-tooltip.is-flipped::before {
+  left: auto;
+  right: -6px;
+  border-right: 0;
+  border-left: 6px solid #fff;
+}
+
+.kanaui-field-tooltip.is-visible {
+  display: block;
+}
+
 .sql-query {
     word-break: break-word;
 }

@@ -16,12 +16,11 @@ Gem::Specification.new do |s|
   s.description = 'Rails UI plugin for the Analytics plugin.'
   s.license     = 'MIT'
 
-  s.files = Dir['{app,config,db,lib}/**/*'] + %w[MIT-LICENSE Rakefile README.md]
+  s.files = Dir['{app,config,db,lib,vendor}/**/*'] + %w[MIT-LICENSE Rakefile README.md]
 
   s.metadata['rubygems_mfa_required'] = 'true'
 
   s.add_dependency 'bootstrap-datepicker-rails', '~> 1.6'
-  s.add_dependency 'd3_rails', '4.1.0'
   s.add_dependency 'font-awesome-rails'
   s.add_dependency 'jquery-rails', '~> 4.5.1'
   s.add_dependency 'js-routes', '>= 1.1', '< 3.0'
