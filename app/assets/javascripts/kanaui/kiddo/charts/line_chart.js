@@ -68,26 +68,24 @@
           return dataset.name;
         }));
 
-        // Create legend container at the top
+        // Create legend container to the right of the chart area
         var legendContainer = svg
           .append("g")
           .attr("class", "chart-legend")
-          .attr("transform", "translate(" + (self.width - 100) + ", -25)");
+          .attr("transform", "translate(" + (self.width + self.margin_left + 15) + ", 10)");
 
         // Calculate total values for legend
         var legendData = datasets.map(function (dataset, index) {
           var latestValue = dataset.values[dataset.values.length - 1];
-          var totalCount = dataset.values.length;
           return {
             name: dataset.name,
             value: latestValue ? latestValue.y : 0,
-            count: totalCount,
             color: self.color(dataset.name),
             index: index,
           };
         });
 
-        // Create legend items
+        // Create legend items as a vertical column
         var legendItems = legendContainer
           .selectAll(".legend-item")
           .data(legendData)
@@ -95,34 +93,30 @@
           .append("g")
           .attr("class", "legend-item");
 
-        var xOffset = 0;
-        legendItems.each(function (d, i) {
+        var yOffset = 0;
+        legendItems.each(function (d) {
           var legendItem = d3.select(this);
 
-          // Add colored circle
           legendItem
             .append("circle")
-            .attr("cx", xOffset + 6)
-            .attr("cy", 0)
+            .attr("cx", 6)
+            .attr("cy", yOffset)
             .attr("r", 6)
             .style("fill", d.color);
 
-          // Add text label
           var labelText =
-            helper.formatSeriesName(d.name) + " (" + d.count + "): " + d3.format(",.2f")(d.value);
+            helper.formatSeriesName(d.name, self.reportName) + ": " + helper.formatValue(d.value);
           legendItem
             .append("text")
-            .attr("x", xOffset + 18)
-            .attr("y", 0)
+            .attr("x", 18)
+            .attr("y", yOffset)
             .attr("dy", "0.35em")
             .style("font-size", "0.875rem")
             .style("font-weight", "500")
             .style("fill", "#6B7280")
             .text(labelText);
 
-          // Calculate width for next item
-          var textWidth = this.getBBox().width;
-          xOffset += textWidth + 40; // Add spacing between items
+          yOffset += 22;
         });
 
         // Render data lines

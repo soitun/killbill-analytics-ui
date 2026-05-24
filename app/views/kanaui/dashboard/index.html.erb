@@ -150,6 +150,11 @@
                 <div class="">
                   <% if params[:name] %>
                     
+                    <div class="chart-title-container mb-2">
+                      <h2 class="chart-title" id="chart-title">
+                        <%= @report['reportPrettyName'] %>
+                      </h2>
+                    </div>
                     <div id="date-controls" style="display: none;">
                       <div class="custom-tabs my-4">
                         <% @available_start_dates.each do |key, value| %>
@@ -158,14 +163,7 @@
                       </div>
                     </div>
                     <div id="loading-spinner"></div>
-                    <div class="d-flex w-100 align-items-center">
-                      <div class="chart-title-container">
-                        <h2 class="chart-title" id="chart-title">
-                          <%= @raw_name.titleize %>
-                        </h2>
-                      </div>
-                      <div id="chartAnchor" data-reports-path="<%= kanaui_engine.reports_path(params.to_h) %>" class="w-100 h-100"></div>
-                    </div>
+                    <div id="chartAnchor" data-reports-path="<%= kanaui_engine.reports_path(params.to_h) %>" data-report-name="<%= @report['reportPrettyName'] %>" class="w-100"></div>
                     
                     <hr>
 
@@ -318,4 +316,32 @@
     // Safe to navigate
     window.location.href = url;
   }
+
+  // Persist the open/closed state of #advanced-controls across page reloads
+  (function () {
+    var STORAGE_KEY = 'kanaui.advancedControls.open';
+    var panel = document.getElementById('advanced-controls');
+    if (!panel) {
+      return;
+    }
+    var toggle = document.querySelector('[data-bs-toggle="collapse"][href="#advanced-controls"]');
+
+    // Restore previous state before Bootstrap initializes
+    try {
+      if (localStorage.getItem(STORAGE_KEY) === '1') {
+        panel.classList.add('show');
+        if (toggle) {
+          toggle.setAttribute('aria-expanded', 'true');
+          toggle.classList.remove('collapsed');
+        }
+      }
+    } catch (e) { /* localStorage may be unavailable */ }
+
+    panel.addEventListener('shown.bs.collapse', function () {
+      try { localStorage.setItem(STORAGE_KEY, '1'); } catch (e) {}
+    });
+    panel.addEventListener('hidden.bs.collapse', function () {
+      try { localStorage.setItem(STORAGE_KEY, '0'); } catch (e) {}
+    });
+  })();
 <% end %>

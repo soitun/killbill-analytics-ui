@@ -59,15 +59,16 @@
           var infoBox = info.node().getBBox();
           var infoTitleBox = infoTitle.node().getBBox();
           var margin = 40;
+          var minWidth = Math.max(box.width, infoTitleBox.width) + margin;
 
           info.attr("height", infoBox.height + box.height + 7);
-          if (infoBox.width < box.width) {
-            info.attr("width", box.width + margin);
-            infoTitleBg.attr("width", box.width + margin);
+          if (infoBox.width < minWidth) {
+            info.attr("width", minWidth);
+            infoTitleBg.attr("width", minWidth);
 
             $("#mouseover_canvas #info-title").attr(
               "dx",
-              (box.width + margin) / 2 - infoTitleBox.width / 2
+              minWidth / 2 - infoTitleBox.width / 2
             );
           }
         };
@@ -81,7 +82,9 @@
         });
 
         function mousemove(event) {
-          var mouseX = d3.pointer(event, this)[0];
+          var pointer = d3.pointer(event, this);
+          var mouseX = pointer[0];
+          var mouseY = pointer[1];
 
           $("#mouseover_canvas .chart_values").detach().remove();
           $("#mouseover_canvas .chart_circles").detach().remove();
@@ -115,11 +118,7 @@
               .attr("cy", y(d.y))
               .style("fill", self.color(name));
 
-            var canvasPosition = x(x0) > self.width / 2 ? 50 : self.width / 2;
-
-            canvas.attr("transform", "translate(" + canvasPosition + ",0)");
-
-            canvas.select("#info-title").text(d.date);
+            canvas.select("#info-title").text(helper.formatDate(d.date));
 
             elementsForLegend.push({ element: element, d: d });
           });
@@ -150,11 +149,21 @@
               .text(
                 element.d === undefined
                   ? element.element.name
-                  : helper.formatValueDisplay(element.element.name, element.d)
+                  : helper.formatValueDisplay(element.element.name, element.d, self.reportName)
               );
 
             addInfoDimensions(text);
           });
+
+          // Position tooltip to follow the cursor; flip left when near the right edge
+          var tooltipOffset = 15;
+          var tooltipWidth = info.node().getBBox().width;
+          var tooltipHeight = info.node().getBBox().height;
+          var canvasX = (mouseX + tooltipOffset + tooltipWidth > self.width)
+            ? mouseX - tooltipWidth - tooltipOffset
+            : mouseX + tooltipOffset;
+          var canvasY = Math.max(0, mouseY - 150);
+          canvas.attr("transform", "translate(" + canvasX + "," + canvasY + ")");
         }
       },
     };
