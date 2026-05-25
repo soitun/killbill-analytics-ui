@@ -149,19 +149,20 @@
               .text(
                 element.d === undefined
                   ? element.element.name
-                  : helper.formatValueDisplay(element.element.name, element.d, self.reportName)
+                  : helper.formatValueDisplay(element.element.name, element.d)
               );
 
             addInfoDimensions(text);
           });
 
-          // Position tooltip to follow the cursor; flip left when near the right edge
+          // Position tooltip to follow the cursor; flip left when near the right edge.
           var tooltipOffset = 15;
           var tooltipWidth = info.node().getBBox().width;
           var tooltipHeight = info.node().getBBox().height;
-          var canvasX = (mouseX + tooltipOffset + tooltipWidth > self.width)
+          var localX = (mouseX + tooltipOffset + tooltipWidth > self.width)
             ? mouseX - tooltipWidth - tooltipOffset
             : mouseX + tooltipOffset;
+          var canvasX = localX + self.margin_left;
           var canvasY = Math.max(0, mouseY - 150);
           canvas.attr("transform", "translate(" + canvasX + "," + canvasY + ")");
         }

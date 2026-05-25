@@ -18,9 +18,15 @@ module Kanaui
         end
 
         def reports(start_date, end_date, name, smooth, sql_only, format, options = {})
-          path = "#{KILLBILL_ANALYTICS_PREFIX}/reports?format=#{format}&startDate=#{start_date}&endDate=#{end_date}&name=#{name}"
-          path = "#{path}&smooth=#{smooth}" if smooth
-          path = "#{path}&sqlOnly=true" if sql_only.present?
+          query = {
+            'format' => format,
+            'startDate' => start_date,
+            'endDate' => end_date,
+            'name' => name
+          }
+          query['smooth'] = smooth if smooth
+          query['sqlOnly'] = 'true' if sql_only.present?
+          path = "#{KILLBILL_ANALYTICS_PREFIX}/reports?#{query.to_query}"
           response = KillBillClient::API.get path, {}, options
           response.body
         end
