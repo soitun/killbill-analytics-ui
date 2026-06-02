@@ -149,7 +149,7 @@
               .text(
                 element.d === undefined
                   ? element.element.name
-                  : helper.formatValueDisplay(element.element.name, element.d)
+                  : helper.formatValueDisplay(element.element.name, element.d, self.reportName)
               );
 
             addInfoDimensions(text);

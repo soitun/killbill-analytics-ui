@@ -42,10 +42,18 @@
         .map(function (segment) {
           var parts = segment.split(/\s*:\s*/);
           if (parts.length > 1) {
+            var qualifier = humanizeSegment(parts.slice(1).join(": "));
             var label = (reportName && parts[0].trim().toLowerCase() === "count")
               ? reportName
               : humanizeSegment(parts[0]);
-            return label + " (" + humanizeSegment(parts.slice(1).join(": ")) + ")";
+
+            // For count-based reports, a numeric qualifier is usually tenant id
+            // and should not be displayed in UI labels.
+            if (reportName && parts[0].trim().toLowerCase() === "count" && /^\d+$/.test(qualifier)) {
+              return label;
+            }
+
+            return label + " (" + qualifier + ")";
           }
           return humanizeSegment(segment);
         })
@@ -88,8 +96,11 @@
       formatValue: formatValue,
       formatSeriesName: formatSeriesName,
       formatDate: formatDate,
-      formatValueDisplay: function (name, d) {
-        return formatSeriesLabel(name) + ": " + formatValue(d.y);
+      formatValueDisplay: function (name, d, reportName) {
+        var seriesLabel = reportName
+          ? formatSeriesName(name, reportName)
+          : formatSeriesLabel(name);
+        return seriesLabel + ": " + formatValue(d.y);
       },
     };
   };
