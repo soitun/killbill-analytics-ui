@@ -19,6 +19,7 @@
       raw_height: raw_height,
       width: raw_width - margin_left - margin_right,
       height: raw_height - margin_top - margin_bottom,
+      reportName: $("#chartAnchor").data("report-name") || "",
     };
   };
 })((window.Kiddo = window.Kiddo || {}), d3);

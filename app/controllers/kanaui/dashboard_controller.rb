@@ -146,7 +146,7 @@ module Kanaui
         groups[field_name] = params["group_#{field_name}"]
       end
 
-      filter_query = ''
+      filter_query = +''
       filters.each do |k, v|
         next if v.blank?
 
@@ -158,8 +158,7 @@ module Kanaui
       groups.each do |k, v|
         next if v.blank?
 
-        # TODO: Make "no other" configurable
-        query << "^dimension:#{k}(#{v.join('|')}|-)"
+        query << "^dimension:#{k}(#{v.join('|')})"
       end
 
       # Template variables

@@ -150,6 +150,11 @@
                 <div class="">
                   <% if params[:name] %>
                     
+                    <div class="chart-title-container mb-2">
+                      <h2 class="chart-title" id="chart-title">
+                        <%= @report['reportPrettyName'] %>
+                      </h2>
+                    </div>
                     <div id="date-controls" style="display: none;">
                       <div class="custom-tabs my-4">
                         <% @available_start_dates.each do |key, value| %>
@@ -158,14 +163,7 @@
                       </div>
                     </div>
                     <div id="loading-spinner"></div>
-                    <div class="d-flex w-100 align-items-center">
-                      <div class="chart-title-container">
-                        <h2 class="chart-title" id="chart-title">
-                          <%= @raw_name.titleize %>
-                        </h2>
-                      </div>
-                      <div id="chartAnchor" data-reports-path="<%= kanaui_engine.reports_path(params.to_h) %>" class="w-100 h-100"></div>
-                    </div>
+                    <div id="chartAnchor" data-reports-path="<%= kanaui_engine.reports_path(params.to_h) %>" data-report-name="<%= @report['reportPrettyName'] %>" class="w-100"></div>
                     
                     <hr>
 
@@ -207,16 +205,16 @@
                             <% at_least_two_months = params[:start_date].blank? || params[:end_date].blank? || (params[:end_date].to_date.beginning_of_month - 1.month > params[:start_date].to_date) %>
                             <% at_least_two_weeks = params[:start_date].blank? || params[:end_date].blank? || (params[:end_date].to_date.beginning_of_week - 1.week > params[:start_date].to_date) %>
                             <% if params[:smooth] != 'AVERAGE_WEEKLY' && at_least_two_weeks %>
-                              <li><%= link_to 'Weekly average', kanaui_engine.dashboard_index_path(params.to_h.merge(:smooth => 'AVERAGE_WEEKLY')) %></li>
+                              <li class="smoothing-option"><%= link_to 'Weekly average', kanaui_engine.dashboard_index_path(params.to_h.merge(:smooth => 'AVERAGE_WEEKLY')) %></li>
                             <% end %>
                             <% if params[:smooth] != 'AVERAGE_MONTHLY' && at_least_two_months %>
-                              <li><%= link_to 'Monthly average', kanaui_engine.dashboard_index_path(params.to_h.merge(:smooth => 'AVERAGE_MONTHLY')) %></li>
+                              <li class="smoothing-option"><%= link_to 'Monthly average', kanaui_engine.dashboard_index_path(params.to_h.merge(:smooth => 'AVERAGE_MONTHLY')) %></li>
                             <% end %>
                             <% if params[:smooth] != 'SUM_WEEKLY' && at_least_two_weeks %>
-                              <li><%= link_to 'Weekly sum', kanaui_engine.dashboard_index_path(params.to_h.merge(:smooth => 'SUM_WEEKLY')) %></li>
+                              <li class="smoothing-option"><%= link_to 'Weekly sum', kanaui_engine.dashboard_index_path(params.to_h.merge(:smooth => 'SUM_WEEKLY')) %></li>
                             <% end %>
                             <% if params[:smooth] != 'SUM_MONTHLY' && at_least_two_months %>
-                              <li><%= link_to 'Monthly sum', kanaui_engine.dashboard_index_path(params.to_h.merge(:smooth => 'SUM_MONTHLY')) %></li>
+                              <li class="smoothing-option"><%= link_to 'Monthly sum', kanaui_engine.dashboard_index_path(params.to_h.merge(:smooth => 'SUM_MONTHLY')) %></li>
                             <% end %>
                           <% end %>
                           <% filter_fields = ((@report['schema'] || {})['fields'] || []).select { |field| !field['distinctValues'].blank? && field['dataType'] =~ /char/ } # To ignore tenant_record_id %>
@@ -259,14 +257,14 @@
                                   </div>
                               <% end %>
                             </li>
-                            <li>
+                            <li class="query-block">
                               <div class="query-label">
                                 Current Analytics query:&nbsp;<%= link_to '<i class="fa fa-question-circle"></i>'.html_safe, 'http://docs.killbill.io/latest/userguide_analytics.html#_dashboard_api', :target => '_blank' %>
                               </div>
                               <pre><%= params[:name] -%></pre>
                             </li>
                         <% end %>
-                          <li><%= link_to t('kanaui.dashboard.advanced_controls.sql_query'), kanaui_engine.reports_path(params.to_h.merge(:sql_only => true)) %></li>
+                          <li class="smoothing-option"><%= link_to t('kanaui.dashboard.advanced_controls.sql_query'), kanaui_engine.reports_path(params.to_h.merge(:sql_only => true)) %></li>
                         </ul>
                       </div>
                     </div>
@@ -318,4 +316,32 @@
     // Safe to navigate
     window.location.href = url;
   }
+
+  // Persist the open/closed state of #advanced-controls across page reloads
+  (function () {
+    var STORAGE_KEY = 'kanaui.advancedControls.open';
+    var panel = document.getElementById('advanced-controls');
+    if (!panel) {
+      return;
+    }
+    var toggle = document.querySelector('[data-bs-toggle="collapse"][href="#advanced-controls"]');
+
+    // Restore previous state before Bootstrap initializes
+    try {
+      if (localStorage.getItem(STORAGE_KEY) === '1') {
+        panel.classList.add('show');
+        if (toggle) {
+          toggle.setAttribute('aria-expanded', 'true');
+          toggle.classList.remove('collapsed');
+        }
+      }
+    } catch (e) { /* localStorage may be unavailable */ }
+
+    panel.addEventListener('shown.bs.collapse', function () {
+      try { localStorage.setItem(STORAGE_KEY, '1'); } catch (e) {}
+    });
+    panel.addEventListener('hidden.bs.collapse', function () {
+      try { localStorage.setItem(STORAGE_KEY, '0'); } catch (e) {}
+    });
+  })();
 <% end %>

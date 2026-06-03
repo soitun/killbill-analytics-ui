@@ -128,13 +128,7 @@
       }
 
       document.querySelectorAll('[data-kanaui-tooltip]').forEach(function (el) {
-        el.addEventListener('click', function (event) {
-          event.stopPropagation();
-          if (activeTooltipTrigger === el && tooltip.classList.contains('is-visible')) {
-            hideTooltip();
-            return;
-          }
-
+        el.addEventListener('mouseenter', function () {
           var rect = el.getBoundingClientRect();
           var left = window.pageXOffset + rect.right + 12;
           var top = window.pageYOffset + rect.top - 2;
@@ -153,10 +147,10 @@
             tooltip.classList.add('is-flipped');
           }
         });
-      });
 
-      document.addEventListener('click', function () {
-        hideTooltip();
+        el.addEventListener('mouseleave', function () {
+          hideTooltip();
+        });
       });
 
       document.addEventListener('keydown', function (event) {

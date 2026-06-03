@@ -37,7 +37,7 @@ en:
         source_query: "SQL Query"
         source_query_help: "Don't add a trailing ;"
         source_configuration_error: "Either Source Table Name or SQL Query is required."
-        source_name: "Source Name"
+        source_name: "Remote Database Name"
         source_name_help: "Must match a database configuration entry in the Analytics plugin"
         tooltips:
           report_name: "Unique identifier for your report."
@@ -59,7 +59,7 @@ en:
         pretty_name: "Pretty Name"
         type: "Type"
         source: "Source"
-        source_name: "Source Name"
+        source_name: "Remote Database Name"
         source_query: "Source Query"
         refresh_procedure: "Refresh Procedure"
         refresh_frequency: "Refresh Frequency"

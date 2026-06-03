@@ -1,9 +1,11 @@
 (function (Kiddo, d3) {
   Kiddo.Helper = function () {
+    var formatValue = function (d) {
+      return d % 1 === 0 ? d3.format(",d")(d) : d3.format(",.2f")(d);
+    };
     var formatCurrency = function (d) {
       return "$" + formatValue(d);
     };
-    var formatValue = d3.format(",.2f");
 
     var humanizeSegment = function (segment) {
       segment = String(segment || "")
@@ -30,33 +32,75 @@
         .join(" ");
     };
 
-    var formatSeriesName = function (name) {
+    var formatSeriesName = function (name, reportName) {
       return String(name || "")
         .split(/\s*::\s*/)
+        .filter(function (segment) {
+          // Remove numeric-only segments (tenant record id)
+          return !/^\d+$/.test(segment.trim());
+        })
         .map(function (segment) {
           var parts = segment.split(/\s*:\s*/);
           if (parts.length > 1) {
-            return humanizeSegment(parts[0]) + " (" + humanizeSegment(parts.slice(1).join(": ")) + ")";
-          }
+            var qualifier = humanizeSegment(parts.slice(1).join(": "));
+            var label = (reportName && parts[0].trim().toLowerCase() === "count")
+              ? reportName
+              : humanizeSegment(parts[0]);
 
+            // For count-based reports, a numeric qualifier is usually tenant id
+            // and should not be displayed in UI labels.
+            if (reportName && parts[0].trim().toLowerCase() === "count" && /^\d+$/.test(qualifier)) {
+              return label;
+            }
+
+            return label + " (" + qualifier + ")";
+          }
           return humanizeSegment(segment);
         })
         .filter(function (segment) {
           return segment.length > 0;
         })
-        .join(" / ");
+        .join(" : ");
+    };
+
+    // Extracts just the qualifier part (e.g. "EUR" from "count: EUR :: 1") for compact tooltip labels
+    var formatSeriesLabel = function (name) {
+      var segments = String(name || "")
+        .split(/\s*::\s*/)
+        .filter(function (segment) {
+          return !/^\d+$/.test(segment.trim());
+        });
+
+      if (segments.length === 0) return humanizeSegment(name);
+
+      var parts = segments[0].split(/\s*:\s*/);
+      if (parts.length > 1) {
+        return humanizeSegment(parts.slice(1).join(": "));
+      }
+      return humanizeSegment(segments[0]);
+    };
+
+    var parseDateFn = d3.timeParse("%Y-%m-%d");
+    var formatDateFn = d3.timeFormat("%b %d, %Y");
+    var formatDate = function (dateStr) {
+      var parsed = parseDateFn(dateStr);
+      return parsed ? formatDateFn(parsed) : dateStr;
     };
 
     return {
-      parseDate: d3.timeParse("%Y-%m-%d"),
+      parseDate: parseDateFn,
       bisectDate: d3.bisector(function (d) {
         return d.x;
       }).left,
       formatCurrency: formatCurrency,
       formatValue: formatValue,
       formatSeriesName: formatSeriesName,
-      formatValueDisplay: function (name, d) {
-        return formatSeriesName(name) + ": " + formatValue(d.y); // Add currency boolean on backend later -- formatCurrency(d.y); }
+      formatDate: formatDate,
+      formatValueDisplay: function (name, d, reportName) {
+        var seriesLabel = reportName
+          ? formatSeriesName(name, reportName)
+          : formatSeriesLabel(name);
+        return seriesLabel + ": " + formatValue(d.y);
       },
     };
   };
